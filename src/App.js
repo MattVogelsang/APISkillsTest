@@ -202,32 +202,6 @@ function App() {
 
   return (
     <div className="dashboard-container">
-      <header className="top-nav">
-        <div className="nav-left">
-          <button className="grid-icon" type="button">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <rect x="2" y="2" width="6" height="6" stroke="#6E6E6E" strokeWidth="1.5"/>
-              <rect x="12" y="2" width="6" height="6" stroke="#6E6E6E" strokeWidth="1.5"/>
-              <rect x="2" y="12" width="6" height="6" stroke="#6E6E6E" strokeWidth="1.5"/>
-              <rect x="12" y="12" width="6" height="6" stroke="#6E6E6E" strokeWidth="1.5"/>
-            </svg>
-          </button>
-          <div className="breadcrumb">
-            <span>2024 FED API Skills Test</span>
-            <span className="separator"> &gt; </span>
-            <span>HealthCare Dashboard</span>
-          </div>
-        </div>
-        <div className="nav-right-icons">
-          <button className="code-icon" type="button">
-            <span>&lt;/&gt;</span>
-          </button>
-          <button className="code-icon active" type="button">
-            <span>&#123;&#125;</span>
-          </button>
-        </div>
-      </header>
-
       <div className="main-layout">
         <aside className="left-sidebar">
           <div className="metric-card purple">
