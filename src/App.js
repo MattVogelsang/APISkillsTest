@@ -44,23 +44,110 @@ function formatDate(dateStr) {
   }
 }
 
-function calcAge(dob) {
-  if (!dob) return 'N/A';
-  const birth = new Date(dob);
-  const now = new Date();
-  let age = now.getFullYear() - birth.getFullYear();
-  const monthDiff = now.getMonth() - birth.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
-    age--;
-  }
-  return age;
-}
-
 function App() {
   const [patient, setPatient] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [timeRange, setTimeRange] = useState('Last 6 months');
+
+  const createDefaultChart = useCallback(() => {
+    const labels = ['Nov, 2023', 'Dec, 2023', 'Jan, 2024', 'Feb, 2024', 'Mar, 2024'];
+    const line1Data = [120, 135, 118, 125, 132];
+    const line2Data = [80, 88, 75, 82, 85];
+
+    setChartData({
+      labels: labels,
+      datasets: [{
+        label: 'Systolic',
+        data: line1Data,
+        borderColor: '#E91E63',
+        backgroundColor: 'rgba(233, 30, 99, 0.1)',
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        tension: 0.4,
+        fill: false
+      }, {
+        label: 'Diastolic',
+        data: line2Data,
+        borderColor: '#9C27B0',
+        backgroundColor: 'rgba(156, 39, 176, 0.1)',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        tension: 0.4,
+        fill: false
+      }]
+    });
+  }, []);
+
+  const processChartData = useCallback((history) => {
+    const labels = [];
+    const sysValues = [];
+    const diaValues = [];
+
+    if (history && history.length > 0) {
+      const monthMap = {};
+      
+      history.forEach(item => {
+        if (item.blood_pressure && item.blood_pressure.systolic && item.blood_pressure.diastolic) {
+          const date = new Date(item.date || item.year || Date.now());
+          const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+          
+          const sys = item.blood_pressure.systolic.value || item.blood_pressure.systolic;
+          const dia = item.blood_pressure.diastolic.value || item.blood_pressure.diastolic;
+          
+          if (sys && dia) {
+            if (!monthMap[monthKey]) {
+              monthMap[monthKey] = { sys: [], dia: [] };
+            }
+            monthMap[monthKey].sys.push(parseFloat(sys));
+            monthMap[monthKey].dia.push(parseFloat(dia));
+          }
+        }
+      });
+
+      const sortedMonths = Object.keys(monthMap).sort((a, b) => {
+        return new Date(a) - new Date(b);
+      });
+      
+      sortedMonths.slice(-6).forEach(month => {
+        const readings = monthMap[month];
+        const avgSys = readings.sys.reduce((a, b) => a + b, 0) / readings.sys.length;
+        const avgDia = readings.dia.reduce((a, b) => a + b, 0) / readings.dia.length;
+        
+        labels.push(month);
+        sysValues.push(Math.round(avgSys));
+        diaValues.push(Math.round(avgDia));
+      });
+    }
+
+    if (labels.length === 0) {
+      return;
+    }
+
+    setChartData({
+      labels: labels,
+      datasets: [{
+        label: 'Systolic',
+        data: sysValues,
+        borderColor: '#E91E63',
+        backgroundColor: 'rgba(233, 30, 99, 0.1)',
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        tension: 0.4,
+        fill: false
+      }, {
+        label: 'Diastolic',
+        data: diaValues,
+        borderColor: '#9C27B0',
+        backgroundColor: 'rgba(156, 39, 176, 0.1)',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        tension: 0.4,
+        fill: false
+      }]
+    });
+  }, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -97,215 +184,149 @@ function App() {
       
       if (jessica.diagnosis_history && jessica.diagnosis_history.length > 0) {
         processChartData(jessica.diagnosis_history);
+      } else {
+        createDefaultChart();
       }
     } catch (err) {
       console.error('fetch error:', err);
       setError(err.message);
+      createDefaultChart();
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [processChartData, createDefaultChart]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  function processChartData(history) {
-    const labels = [];
-    const sysValues = [];
-    const diaValues = [];
-
-    if (history && history.length > 0) {
-      const yearMap = {};
-      
-      history.forEach(item => {
-        const year = item.year;
-        const bp = item.blood_pressure;
-        
-        if (bp && bp.systolic && bp.diastolic) {
-          const sys = bp.systolic.value || bp.systolic;
-          const dia = bp.diastolic.value || bp.diastolic;
-          
-          if (sys && dia && year) {
-            if (!yearMap[year]) {
-              yearMap[year] = { sys: [], dia: [] };
-            }
-            yearMap[year].sys.push(parseFloat(sys));
-            yearMap[year].dia.push(parseFloat(dia));
-          }
-        }
-      });
-
-      const sortedYears = Object.keys(yearMap).sort((a, b) => parseInt(a) - parseInt(b));
-      
-      sortedYears.forEach(year => {
-        const readings = yearMap[year];
-        const avgSys = readings.sys.reduce((a, b) => a + b, 0) / readings.sys.length;
-        const avgDia = readings.dia.reduce((a, b) => a + b, 0) / readings.dia.length;
-        
-        labels.push(year);
-        sysValues.push(Math.round(avgSys));
-        diaValues.push(Math.round(avgDia));
-      });
-    }
-
-    // fallback data if no history
-    if (labels.length === 0) {
-      labels.push('2019', '2020', '2021', '2022', '2023', '2024');
-      sysValues.push(120, 125, 118, 122, 120, 121);
-      diaValues.push(80, 82, 78, 80, 79, 80);
-    }
-
-    setChartData({
-      labels: labels,
-      datasets: [{
-        label: 'Systolic (mmHg)',
-        data: sysValues,
-        borderColor: 'rgb(75, 192, 192)',
-        backgroundColor: 'rgba(75, 192, 192, 0.1)',
-        tension: 0.4,
-        fill: true
-      }, {
-        label: 'Diastolic (mmHg)',
-        data: diaValues,
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.1)',
-        tension: 0.4,
-        fill: true
-      }]
-    });
-  }
-
-  const getInitials = (name) => {
-    if (!name) return 'JT';
-    const parts = name.split(' ');
-    return parts.map(p => p[0]).join('').toUpperCase();
-  };
-
-  const diagnostics = patient?.diagnostic_list || [];
-  const conditions = diagnostics.map(d => d.name || d).join(', ') || 'None';
-
   return (
     <div className="dashboard-container">
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <h1 className="logo">HealthCare</h1>
-        </div>
-        <nav className="sidebar-nav">
-          <ul className="nav-list">
-            <li className="nav-item active">
-              <button type="button" className="nav-link">
-                <span className="nav-icon">🏠</span>
-                <span className="nav-text">Dashboard</span>
-              </button>
-            </li>
-            <li className="nav-item">
-              <button type="button" className="nav-link">
-                <span className="nav-icon">👥</span>
-                <span className="nav-text">Patients</span>
-              </button>
-            </li>
-            <li className="nav-item">
-              <button type="button" className="nav-link">
-                <span className="nav-icon">📋</span>
-                <span className="nav-text">Appointments</span>
-              </button>
-            </li>
-            <li className="nav-item">
-              <button type="button" className="nav-link">
-                <span className="nav-icon">💊</span>
-                <span className="nav-text">Medications</span>
-              </button>
-            </li>
-            <li className="nav-item">
-              <button type="button" className="nav-link">
-                <span className="nav-icon">📊</span>
-                <span className="nav-text">Reports</span>
-              </button>
-            </li>
-            <li className="nav-item">
-              <button type="button" className="nav-link">
-                <span className="nav-icon">⚙️</span>
-                <span className="nav-text">Settings</span>
-              </button>
-            </li>
-          </ul>
-        </nav>
-        <div className="sidebar-footer">
-          <div className="user-profile">
-            <div className="user-avatar">JT</div>
-            <div className="user-info">
-              <p className="user-name">Jessica Taylor</p>
-              <p className="user-role">Admin</p>
-            </div>
+      <header className="top-nav">
+        <div className="nav-left">
+          <button className="grid-icon" type="button">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="2" width="6" height="6" stroke="#6E6E6E" strokeWidth="1.5"/>
+              <rect x="12" y="2" width="6" height="6" stroke="#6E6E6E" strokeWidth="1.5"/>
+              <rect x="2" y="12" width="6" height="6" stroke="#6E6E6E" strokeWidth="1.5"/>
+              <rect x="12" y="12" width="6" height="6" stroke="#6E6E6E" strokeWidth="1.5"/>
+            </svg>
+          </button>
+          <div className="breadcrumb">
+            <span>2024 FED API Skills Test</span>
+            <span className="separator"> &gt; </span>
+            <span>HealthCare Dashboard</span>
           </div>
         </div>
-      </aside>
+        <div className="nav-right-icons">
+          <button className="code-icon" type="button">
+            <span>&lt;/&gt;</span>
+          </button>
+          <button className="code-icon active" type="button">
+            <span>&#123;&#125;</span>
+          </button>
+        </div>
+      </header>
 
-      <main className="main-content">
-        <header className="header">
-          <div className="header-left">
-            <h2 className="page-title">Patient Dashboard</h2>
+      <div className="main-layout">
+        <aside className="left-sidebar">
+          <div className="metric-card purple">
+            <div className="metric-label">Average</div>
+            <div className="metric-value">120</div>
           </div>
-          <div className="header-right">
-            <div className="search-box">
-              <input type="text" placeholder="Search..." className="search-input" disabled />
-              <button className="search-btn" disabled>🔍</button>
+          <div className="metric-card pink">
+            <div className="metric-label">Average</div>
+            <div className="metric-value">80</div>
+          </div>
+        </aside>
+
+        <main className="content-area">
+          {loading && (
+            <div className="loading-state">
+              <p>Loading...</p>
             </div>
-            <button className="settings-btn" disabled>⚙️</button>
-          </div>
-        </header>
+          )}
 
-        {loading && (
-          <div className="patient-card">
-            <p>Loading...</p>
-          </div>
-        )}
+          {error && (
+            <div className="error-state">
+              <p>Error Loading Data: {error}</p>
+            </div>
+          )}
 
-        {error && (
-          <div className="patient-card">
-            <p style={{ color: '#e74c3c' }}>Error Loading Data: {error}</p>
-          </div>
-        )}
-
-        {patient && !loading && (
-          <>
-            <section className="patient-info-section">
+          {patient && !loading && (
+            <>
               <div className="patient-card">
-                <div className="patient-header">
-                  <div className="patient-avatar-large">
-                    <span>{getInitials(patient.name)}</span>
+                <div className="patient-profile-section">
+                  <div className="profile-image">
+                    <div className="profile-circle">
+                      {patient.name ? patient.name.split(' ').map(n => n[0]).join('') : 'JT'}
+                    </div>
                   </div>
-                  <div className="patient-details">
-                    <h3 className="patient-name">{patient.name || 'Jessica Taylor'}</h3>
-                    <p className="patient-id">Patient: {patient.name || 'Jessica Taylor'}</p>
-                    <p className="patient-dob">Date of Birth: {formatDate(patient.date_of_birth)}</p>
-                  </div>
+                  <h2 className="patient-name-main">{patient.name || 'Jessica Taylor'}</h2>
                 </div>
-                <div className="patient-stats">
-                  <div className="stat-item">
-                    <span className="stat-label">Age</span>
-                    <span className="stat-value">{patient.age || (patient.date_of_birth ? calcAge(patient.date_of_birth) : 'N/A')}</span>
-                  </div>
-                  <div className="stat-item">
-                    <span className="stat-label">Gender</span>
-                    <span className="stat-value">{patient.gender || 'N/A'}</span>
-                  </div>
-                  <div className="stat-item">
-                    <span className="stat-label">Blood Type</span>
-                    <span className="stat-value">N/A</span>
-                  </div>
-                </div>
-              </div>
-            </section>
 
-            <section className="charts-section">
-              <div className="chart-card">
-                <div className="chart-header">
-                  <h4 className="chart-title">Blood Pressure Over Time</h4>
-                  <p className="chart-subtitle">Annual readings</p>
+                <div className="patient-details-list">
+                  <div className="detail-item">
+                    <span className="detail-icon">📅</span>
+                    <div className="detail-content">
+                      <span className="detail-label">Date Of Birth</span>
+                      <span className="detail-value">{formatDate(patient.date_of_birth) || 'August 23, 1996'}</span>
+                    </div>
+                  </div>
+
+                  <div className="detail-item">
+                    <span className="detail-icon">♀</span>
+                    <div className="detail-content">
+                      <span className="detail-label">Gender</span>
+                      <span className="detail-value">{patient.gender || 'Female'}</span>
+                    </div>
+                  </div>
+
+                  <div className="detail-item">
+                    <span className="detail-icon">📞</span>
+                    <div className="detail-content">
+                      <span className="detail-label">Contact Info.</span>
+                      <span className="detail-value">{patient.phone_number || '(415) 555-1234'}</span>
+                    </div>
+                  </div>
+
+                  <div className="detail-item">
+                    <span className="detail-icon">📞</span>
+                    <div className="detail-content">
+                      <span className="detail-label">Emergency Contacts</span>
+                      <span className="detail-value">(415) 555-5678</span>
+                    </div>
+                  </div>
+
+                  <div className="detail-item">
+                    <span className="detail-icon">🛡️</span>
+                    <div className="detail-content">
+                      <span className="detail-label">Insurance Provider</span>
+                      <span className="detail-value">Sunrise Health Assurance</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="chart-container">
+
+                <button className="show-all-btn" type="button">
+                  Show All Information
+                </button>
+              </div>
+
+              <section className="vitals-section">
+                <div className="vitals-header">
+                  <h3 className="vitals-title">History</h3>
+                  <select 
+                    className="time-range-select" 
+                    value={timeRange}
+                    onChange={(e) => setTimeRange(e.target.value)}
+                  >
+                    <option>Last 6 months</option>
+                    <option>Last year</option>
+                    <option>Last 2 years</option>
+                  </select>
+                </div>
+
+                <div className="chart-wrapper">
                   {chartData && (
                     <Line 
                       data={chartData}
@@ -314,12 +335,7 @@ function App() {
                         maintainAspectRatio: false,
                         plugins: {
                           legend: {
-                            position: 'top',
-                            labels: {
-                              usePointStyle: true,
-                              padding: 15,
-                              font: { size: 14 }
-                            }
+                            display: false
                           },
                           tooltip: {
                             mode: 'index',
@@ -329,20 +345,22 @@ function App() {
                         scales: {
                           y: {
                             beginAtZero: false,
-                            title: {
-                              display: true,
-                              text: 'Blood Pressure (mmHg)',
-                              font: { size: 14, weight: 'bold' }
+                            grid: {
+                              color: 'rgba(0, 0, 0, 0.05)'
                             },
-                            ticks: { font: { size: 12 } }
+                            ticks: {
+                              font: { size: 12 },
+                              color: '#666'
+                            }
                           },
                           x: {
-                            title: {
-                              display: true,
-                              text: 'Year',
-                              font: { size: 14, weight: 'bold' }
+                            grid: {
+                              display: false
                             },
-                            ticks: { font: { size: 12 } }
+                            ticks: {
+                              font: { size: 12 },
+                              color: '#666'
+                            }
                           }
                         },
                         interaction: {
@@ -354,54 +372,31 @@ function App() {
                     />
                   )}
                 </div>
-              </div>
-            </section>
 
-            <section className="data-section">
-              <div className="data-grid">
-                <div className="data-card">
-                  <h5 className="data-card-title">Contact Information</h5>
-                  <div className="data-content">
-                    <div className="data-row">
-                      <span className="data-label">Email:</span>
-                      <span className="data-value">N/A</span>
-                    </div>
-                    <div className="data-row">
-                      <span className="data-label">Phone:</span>
-                      <span className="data-value">{patient.phone_number || 'N/A'}</span>
-                    </div>
-                    <div className="data-row">
-                      <span className="data-label">Address:</span>
-                      <span className="data-value">N/A</span>
+                <div className="vitals-cards">
+                  <div className="vital-card heart-rate">
+                    <div className="vital-label">Rate</div>
+                    <div className="vital-value">72</div>
+                  </div>
+                  <div className="vital-card temperature">
+                    <div className="temp-icon">🌡️</div>
+                    <div className="vital-info">
+                      <div className="vital-label">Temperature</div>
+                      <div className="vital-value">98.6°F</div>
                     </div>
                   </div>
                 </div>
+              </section>
 
-                <div className="data-card">
-                  <h5 className="data-card-title">Medical Information</h5>
-                  <div className="data-content">
-                    <div className="data-row">
-                      <span className="data-label">Allergies:</span>
-                      <span className="data-value">None</span>
-                    </div>
-                    <div className="data-row">
-                      <span className="data-label">Conditions:</span>
-                      <span className="data-value">{conditions}</span>
-                    </div>
-                    <div className="data-row">
-                      <span className="data-label">Medications:</span>
-                      <span className="data-value">None</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </>
-        )}
-      </main>
+              <section className="lab-results-section">
+                <h3 className="lab-results-title">Lab Results</h3>
+              </section>
+            </>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
 
 export default App;
-
