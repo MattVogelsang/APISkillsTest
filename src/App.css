@@ -63,11 +63,28 @@ body {
   background-color: #ffffff;
 }
 
+.main-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .patient-card {
   background-color: #ffffff;
   border-radius: 16px;
   padding: 32px;
-  margin-bottom: 32px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -182,12 +199,81 @@ body {
 }
 
 .chart-wrapper {
-  background: linear-gradient(135deg, #F3E5F5 0%, #FCE4EC 100%);
+  background: #F4F0FE;
   border-radius: 12px;
   padding: 24px;
-  margin-bottom: 24px;
-  height: 350px;
+  width: 726px;
+  height: 298px;
   position: relative;
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.chart-container {
+  flex: 1;
+  position: relative;
+  height: 100%;
+}
+
+.blood-pressure-display {
+  background: transparent;
+  padding: 0;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bp-systolic {
+  margin-bottom: 16px;
+}
+
+.bp-diastolic {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.bp-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666666;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bp-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.systolic-dot {
+  background-color: #E66FD2;
+}
+
+.diastolic-dot {
+  background-color: #8C6FE6;
+}
+
+.bp-value {
+  font-size: 48px;
+  font-weight: 700;
+  color: #333333;
+  line-height: 1.2;
+}
+
+.bp-status {
+  font-size: 14px;
+  color: #666666;
+  margin-top: 8px;
 }
 
 .vitals-cards {
@@ -207,11 +293,15 @@ body {
 }
 
 .vital-card.heart-rate {
-  background-color: #B3E5FC;
+  background-color: #E0F3FA;
+}
+
+.vital-card.heart-rate-card {
+  background-color: #FFE6F1;
 }
 
 .vital-card.temperature {
-  background-color: #F8BBD0;
+  background-color: #FFE6E9;
 }
 
 .vital-icon {
@@ -239,15 +329,51 @@ body {
   text-align: left;
 }
 
-.lab-results-section {
-  margin-top: 32px;
+.vital-status {
+  font-size: 14px;
+  color: #666;
+  text-align: left;
+  margin-top: 4px;
 }
 
-.lab-results-title {
+.diagnostic-list-section {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.diagnostic-list-title {
   font-size: 28px;
   font-weight: 700;
   color: #333333;
+  margin: 0 0 24px 0;
+}
+
+.diagnostic-list-content {
+  margin-top: 16px;
+}
+
+.diagnostic-items {
+  list-style: none;
+  padding: 0;
   margin: 0;
+}
+
+.diagnostic-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  font-size: 16px;
+}
+
+.diagnostic-item:last-child {
+  border-bottom: none;
+}
+
+.no-diagnostics {
+  color: #666;
+  font-style: italic;
 }
 
 .loading-state,
