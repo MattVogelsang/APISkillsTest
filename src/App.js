@@ -241,7 +241,6 @@ function App() {
 
                 <div className="patient-details-list">
                   <div className="detail-item">
-                    <span className="detail-icon">📅</span>
                     <div className="detail-content">
                       <span className="detail-label">Date Of Birth</span>
                       <span className="detail-value">{formatDate(patient.date_of_birth) || 'August 23, 1996'}</span>
@@ -249,7 +248,6 @@ function App() {
                   </div>
 
                   <div className="detail-item">
-                    <span className="detail-icon">♀</span>
                     <div className="detail-content">
                       <span className="detail-label">Gender</span>
                       <span className="detail-value">{patient.gender || 'Female'}</span>
@@ -257,7 +255,6 @@ function App() {
                   </div>
 
                   <div className="detail-item">
-                    <span className="detail-icon">📞</span>
                     <div className="detail-content">
                       <span className="detail-label">Contact Info.</span>
                       <span className="detail-value">{patient.phone_number || '(415) 555-1234'}</span>
@@ -265,7 +262,6 @@ function App() {
                   </div>
 
                   <div className="detail-item">
-                    <span className="detail-icon">📞</span>
                     <div className="detail-content">
                       <span className="detail-label">Emergency Contacts</span>
                       <span className="detail-value">(415) 555-5678</span>
@@ -273,7 +269,6 @@ function App() {
                   </div>
 
                   <div className="detail-item">
-                    <span className="detail-icon">🛡️</span>
                     <div className="detail-content">
                       <span className="detail-label">Insurance Provider</span>
                       <span className="detail-value">Sunrise Health Assurance</span>
@@ -353,7 +348,6 @@ function App() {
                     <div className="vital-value">72</div>
                   </div>
                   <div className="vital-card temperature">
-                    <div className="temp-icon">🌡️</div>
                     <div className="vital-info">
                       <div className="vital-label">Temperature</div>
                       <div className="vital-value">98.6°F</div>

@@ -115,12 +115,6 @@ body {
   gap: 16px;
 }
 
-.detail-icon {
-  font-size: 24px;
-  width: 32px;
-  flex-shrink: 0;
-}
-
 .detail-content {
   display: flex;
   flex-direction: column;
@@ -216,12 +210,6 @@ body {
 
 .vital-card.temperature {
   background-color: #F8BBD0;
-  flex-direction: row;
-  gap: 16px;
-}
-
-.temp-icon {
-  font-size: 48px;
 }
 
 .vital-info {
