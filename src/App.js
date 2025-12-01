@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import { Line } from 'react-chartjs-2';
 import {
@@ -62,11 +62,7 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const auth = getAuthToken(USERNAME, PASSWORD);
@@ -108,7 +104,11 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   function processChartData(history) {
     const labels = [];
@@ -194,40 +194,40 @@ function App() {
         <nav className="sidebar-nav">
           <ul className="nav-list">
             <li className="nav-item active">
-              <a href="#" className="nav-link">
+              <button type="button" className="nav-link">
                 <span className="nav-icon">🏠</span>
                 <span className="nav-text">Dashboard</span>
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link">
+              <button type="button" className="nav-link">
                 <span className="nav-icon">👥</span>
                 <span className="nav-text">Patients</span>
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link">
+              <button type="button" className="nav-link">
                 <span className="nav-icon">📋</span>
                 <span className="nav-text">Appointments</span>
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link">
+              <button type="button" className="nav-link">
                 <span className="nav-icon">💊</span>
                 <span className="nav-text">Medications</span>
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link">
+              <button type="button" className="nav-link">
                 <span className="nav-icon">📊</span>
                 <span className="nav-text">Reports</span>
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link">
+              <button type="button" className="nav-link">
                 <span className="nav-icon">⚙️</span>
                 <span className="nav-text">Settings</span>
-              </a>
+              </button>
             </li>
           </ul>
         </nav>
