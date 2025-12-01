@@ -27,7 +27,10 @@ const USERNAME = 'coalition';
 const PASSWORD = 'skills-test';
 
 function getAuthToken(user, pass) {
-  return btoa(user + ':' + pass);
+  if (!user || !pass) {
+    throw new Error('Username and password are required');
+  }
+  return btoa(`${user}:${pass}`);
 }
 
 function formatDate(dateStr) {
@@ -86,42 +89,46 @@ function App() {
     const diaValues = [];
 
     if (history && history.length > 0) {
-      const monthMap = {};
+      const yearMap = {};
       
       history.forEach(item => {
         if (item.blood_pressure && item.blood_pressure.systolic && item.blood_pressure.diastolic) {
-          const date = new Date(item.date || item.year || Date.now());
-          const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+          const year = item.year;
+          
+          if (!year) {
+            return;
+          }
           
           const sys = item.blood_pressure.systolic.value || item.blood_pressure.systolic;
           const dia = item.blood_pressure.diastolic.value || item.blood_pressure.diastolic;
           
-          if (sys && dia) {
-            if (!monthMap[monthKey]) {
-              monthMap[monthKey] = { sys: [], dia: [] };
+          if (sys && dia && !isNaN(parseFloat(sys)) && !isNaN(parseFloat(dia))) {
+            if (!yearMap[year]) {
+              yearMap[year] = { sys: [], dia: [] };
             }
-            monthMap[monthKey].sys.push(parseFloat(sys));
-            monthMap[monthKey].dia.push(parseFloat(dia));
+            yearMap[year].sys.push(parseFloat(sys));
+            yearMap[year].dia.push(parseFloat(dia));
           }
         }
       });
 
-      const sortedMonths = Object.keys(monthMap).sort((a, b) => {
-        return new Date(a) - new Date(b);
-      });
+      const sortedYears = Object.keys(yearMap).sort((a, b) => parseInt(a) - parseInt(b));
       
-      sortedMonths.slice(-6).forEach(month => {
-        const readings = monthMap[month];
-        const avgSys = readings.sys.reduce((a, b) => a + b, 0) / readings.sys.length;
-        const avgDia = readings.dia.reduce((a, b) => a + b, 0) / readings.dia.length;
-        
-        labels.push(month);
-        sysValues.push(Math.round(avgSys));
-        diaValues.push(Math.round(avgDia));
+      sortedYears.forEach(year => {
+        const readings = yearMap[year];
+        if (readings.sys.length > 0 && readings.dia.length > 0) {
+          const avgSys = readings.sys.reduce((a, b) => a + b, 0) / readings.sys.length;
+          const avgDia = readings.dia.reduce((a, b) => a + b, 0) / readings.dia.length;
+          
+          labels.push(year);
+          sysValues.push(Math.round(avgSys));
+          diaValues.push(Math.round(avgDia));
+        }
       });
     }
 
     if (labels.length === 0) {
+      createDefaultChart();
       return;
     }
 
@@ -147,7 +154,7 @@ function App() {
         fill: false
       }]
     });
-  }, []);
+  }, [createDefaultChart]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -177,7 +184,7 @@ function App() {
       });
 
       if (!jessica) {
-        throw new Error('Patient not found');
+        throw new Error('Patient Jessica Taylor not found in API response');
       }
 
       setPatient(jessica);
@@ -232,15 +239,19 @@ function App() {
               <div className="patient-card">
                 <div className="patient-profile-section">
                   <div className="profile-image">
-                    <div className="profile-circle">
-                      {patient.name ? patient.name.split(' ').map(n => n[0]).join('') : 'JT'}
-                    </div>
+                    <img 
+                      src="/images/JT.png" 
+                      srcSet="/images/JT.png 1x, /images/JT2@2x.png 2x"
+                      alt={patient.name || 'Jessica Taylor'} 
+                      className="profile-photo"
+                    />
                   </div>
                   <h2 className="patient-name-main">{patient.name || 'Jessica Taylor'}</h2>
                 </div>
 
                 <div className="patient-details-list">
                   <div className="detail-item">
+                    <img src="/images/calendar_today_FILL0_wght300_GRAD0_opsz24.svg" alt="Calendar" className="detail-icon" />
                     <div className="detail-content">
                       <span className="detail-label">Date Of Birth</span>
                       <span className="detail-value">{formatDate(patient.date_of_birth) || 'August 23, 1996'}</span>
@@ -344,10 +355,14 @@ function App() {
 
                 <div className="vitals-cards">
                   <div className="vital-card heart-rate">
-                    <div className="vital-label">Rate</div>
-                    <div className="vital-value">72</div>
+                    <img src="/images/HeartBPM.svg" alt="Respiratory Rate" className="vital-icon" />
+                    <div className="vital-info">
+                      <div className="vital-label">Respiratory Rate</div>
+                      <div className="vital-value">72</div>
+                    </div>
                   </div>
                   <div className="vital-card temperature">
+                    <img src="/images/temperature.svg" alt="Temperature" className="vital-icon" />
                     <div className="vital-info">
                       <div className="vital-label">Temperature</div>
                       <div className="vital-value">98.6°F</div>
