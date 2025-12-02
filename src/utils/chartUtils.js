@@ -44,8 +44,6 @@ function createDefaultChart() {
   };
 }
 
-export { createDefaultChart };
-
 function formatDateKey(item) {
   if (item.date) {
     const date = new Date(item.date);
