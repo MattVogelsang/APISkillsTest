@@ -2,7 +2,7 @@ import BloodPressureChart from './BloodPressureChart';
 import BloodPressureDisplay from './BloodPressureDisplay';
 import VitalsCards from './VitalsCards';
 
-function VitalsSection({ chartData, timeRange, onTimeRangeChange }) {
+function VitalsSection({ chartData, timeRange, onTimeRangeChange, patient }) {
   return (
     <section className="vitals-section">
       <div className="vitals-header">
@@ -25,7 +25,7 @@ function VitalsSection({ chartData, timeRange, onTimeRangeChange }) {
         <BloodPressureDisplay />
       </div>
 
-      <VitalsCards />
+      <VitalsCards patient={patient} />
     </section>
   );
 }

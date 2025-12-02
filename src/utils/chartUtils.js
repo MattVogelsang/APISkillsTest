@@ -51,10 +51,15 @@ function formatDateKey(item) {
     const year = date.getFullYear();
     return month + ', ' + year;
   }
+  
   if (item.year && item.month) {
-    const monthShort = monthNames[item.month] || item.month.substring(0, 3);
+    let monthShort = monthNames[item.month];
+    if (!monthShort) {
+      monthShort = item.month.substring(0, 3);
+    }
     return monthShort + ', ' + item.year;
   }
+  
   return '';
 }
 
@@ -85,8 +90,11 @@ function processChartData(history) {
     dataByMonth[dateKey].dia.push(dia);
   }
 
-  const sortedMonths = Object.keys(dataByMonth).sort((a, b) => {
-    return new Date(a) - new Date(b);
+  const allMonths = Object.keys(dataByMonth);
+  const sortedMonths = allMonths.sort((a, b) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateA - dateB;
   });
 
   const labels = [];
@@ -97,11 +105,21 @@ function processChartData(history) {
   for (let i = 0; i < lastSixMonths.length; i++) {
     const monthKey = lastSixMonths[i];
     const readings = dataByMonth[monthKey];
+    
     if (readings.sys.length > 0 && readings.dia.length > 0) {
-      const sumSys = readings.sys.reduce((a, b) => a + b, 0);
-      const sumDia = readings.dia.reduce((a, b) => a + b, 0);
+      let sumSys = 0;
+      for (let j = 0; j < readings.sys.length; j++) {
+        sumSys = sumSys + readings.sys[j];
+      }
+      
+      let sumDia = 0;
+      for (let j = 0; j < readings.dia.length; j++) {
+        sumDia = sumDia + readings.dia[j];
+      }
+      
       const avgSys = sumSys / readings.sys.length;
       const avgDia = sumDia / readings.dia.length;
+      
       labels.push(monthKey);
       sysValues.push(Math.round(avgSys));
       diaValues.push(Math.round(avgDia));

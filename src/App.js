@@ -63,10 +63,15 @@ function App() {
 
         setPatients(data);
         
-        const jessica = data.find(p => {
+        let jessica = null;
+        for (let i = 0; i < data.length; i++) {
+          const p = data[i];
           const name = (p.name || '').toLowerCase();
-          return name.includes('jessica') && name.includes('taylor');
-        });
+          if (name.includes('jessica') && name.includes('taylor')) {
+            jessica = p;
+            break;
+          }
+        }
 
         if (!jessica) {
           throw new Error('Patient not found');
@@ -102,9 +107,9 @@ function App() {
                 <PatientsList 
                   patients={patients}
                   selectedPatient={patient}
-                  onSelectPatient={(p) => {
-                    setPatient(p);
-                    const history = p.diagnosis_history;
+                  onSelectPatient={(selectedPatient) => {
+                    setPatient(selectedPatient);
+                    const history = selectedPatient.diagnosis_history;
                     if (history && history.length > 0) {
                       setChartData(processChartData(history));
                     } else {
@@ -120,6 +125,7 @@ function App() {
                       chartData={chartData} 
                       timeRange={timeRange}
                       onTimeRangeChange={setTimeRange}
+                      patient={patient}
                     />
                   </div>
                   <div className="grid-top-right">

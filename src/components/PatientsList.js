@@ -39,7 +39,13 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
             'thomas johnson',
             'david miller'
           ];
-          return !excluded.some(excludedName => name.includes(excludedName));
+          
+          for (let i = 0; i < excluded.length; i++) {
+            if (name.includes(excluded[i])) {
+              return false;
+            }
+          }
+          return true;
         }).map((patient, index) => {
           const isSelected = selectedPatient && patient.name === selectedPatient.name;
           let age = 'N/A';
