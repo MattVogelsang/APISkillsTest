@@ -24,7 +24,7 @@ function createDefaultChart() {
       pointRadius: 6,
       pointHoverRadius: 8,
       pointBackgroundColor: '#E66FD2',
-      pointBorderColor: '#E66FD2',
+      pointBorderColor: '#ffffff',
       pointBorderWidth: 2,
       tension: 0.4,
       fill: false
@@ -36,7 +36,7 @@ function createDefaultChart() {
       pointRadius: 4,
       pointHoverRadius: 6,
       pointBackgroundColor: '#8C6FE6',
-      pointBorderColor: '#8C6FE6',
+      pointBorderColor: '#ffffff',
       pointBorderWidth: 2,
       tension: 0.4,
       fill: false
@@ -140,7 +140,7 @@ function processChartData(history) {
       pointRadius: 6,
       pointHoverRadius: 8,
       pointBackgroundColor: '#E66FD2',
-      pointBorderColor: '#E66FD2',
+      pointBorderColor: '#ffffff',
       pointBorderWidth: 2,
       tension: 0.4,
       fill: false
@@ -152,7 +152,7 @@ function processChartData(history) {
       pointRadius: 4,
       pointHoverRadius: 6,
       pointBackgroundColor: '#8C6FE6',
-      pointBorderColor: '#8C6FE6',
+      pointBorderColor: '#ffffff',
       pointBorderWidth: 2,
       tension: 0.4,
       fill: false

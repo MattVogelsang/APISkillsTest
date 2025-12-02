@@ -18,7 +18,7 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
       <div className="patients-list-header">
         <h3 className="patients-list-title">Patients</h3>
         <button className="patients-search-btn" aria-label="Search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.35-4.35"/>
           </svg>
@@ -78,9 +78,9 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
               </div>
               <button className="patient-list-more" aria-label="More options">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="5" cy="12" r="1"/>
                   <circle cx="12" cy="12" r="1"/>
-                  <circle cx="12" cy="5" r="1"/>
-                  <circle cx="12" cy="19" r="1"/>
+                  <circle cx="19" cy="12" r="1"/>
                 </svg>
               </button>
             </div>

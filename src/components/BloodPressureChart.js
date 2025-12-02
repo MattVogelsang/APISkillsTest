@@ -13,12 +13,12 @@ function BloodPressureChart({ chartData }) {
     scales: {
       y: {
         beginAtZero: false,
-        grid: { color: 'rgba(0, 0, 0, 0.05)' },
-        ticks: { font: { size: 12 }, color: '#666' }
+        grid: { color: 'rgba(0, 0, 0, 0.15)' },
+        ticks: { font: { size: 12 }, color: '#666666' }
       },
       x: {
         grid: { display: false },
-        ticks: { font: { size: 12 }, color: '#666' }
+        ticks: { font: { size: 12 }, color: '#666666' }
       }
     },
     interaction: {

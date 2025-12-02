@@ -10,7 +10,7 @@ function VitalsCards({ patient }) {
     const isJessica = name.includes('jessica') && name.includes('taylor');
 
     if (isJessica) {
-      respiratoryRate = '20 rpm';
+      respiratoryRate = '20 bpm';
       temperature = '98.6°F';
       heartRate = '72 bpm';
       respiratoryStatus = 'Normal';
@@ -19,7 +19,7 @@ function VitalsCards({ patient }) {
       const latest = patient.diagnosis_history[0];
 
       if (latest.respiratory_rate) {
-        respiratoryRate = latest.respiratory_rate.value + ' rpm';
+        respiratoryRate = latest.respiratory_rate.value + ' bpm';
         respiratoryStatus = latest.respiratory_rate.levels;
       }
 
@@ -36,7 +36,7 @@ function VitalsCards({ patient }) {
 
   return (
     <div className="vitals-cards">
-      <div className="vital-card heart-rate">
+      <div className="vital-card respiratory-rate">
         <img src="/images/respiratory rate.svg" alt="Respiratory Rate" className="vital-icon" />
         <div className="vital-info">
           <div className="vital-label">Respiratory Rate</div>
