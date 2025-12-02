@@ -28,10 +28,10 @@ function DiagnosticList({ diagnosticList }) {
               if (diagnostic.name) {
                 name = diagnostic.name;
               }
-              
+
               let description = diagnostic.description || '';
               let status = diagnostic.status || '';
-              
+
               return (
                 <tr key={index} className="diagnostic-row">
                   <td className="diagnostic-name">{name}</td>
@@ -48,4 +48,3 @@ function DiagnosticList({ diagnosticList }) {
 }
 
 export default DiagnosticList;
-

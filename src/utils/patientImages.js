@@ -1,6 +1,6 @@
 export function getPatientImage(patient, index = 0) {
   const name = (patient.name || '').toLowerCase();
-  
+
   if (name.includes('jessica') && name.includes('taylor')) {
     return { src: '/images/JT2@2x.png', srcSet: '/images/JT.png 1x, /images/JT2@2x.png 2x' };
   }
@@ -34,7 +34,7 @@ export function getPatientImage(patient, index = 0) {
   if (name.includes('mike') && name.includes('nolan')) {
     return { src: '/images/pexels-photo-1222271@2x.png', srcSet: '/images/pexels-photo-1222271.png 1x, /images/pexels-photo-1222271@2x.png 2x' };
   }
-  
+
   const fallbackImages = [
     { src: '/images/Layer 4@2x.png', srcSet: '/images/Layer 4.png 1x, /images/Layer 4@2x.png 2x' },
     { src: '/images/Layer 5@2x.png', srcSet: '/images/Layer 5.png 1x, /images/Layer 5@2x.png 2x' },
@@ -46,4 +46,3 @@ export function getPatientImage(patient, index = 0) {
   ];
   return fallbackImages[index % fallbackImages.length];
 }
-

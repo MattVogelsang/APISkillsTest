@@ -7,8 +7,8 @@ function VitalsSection({ chartData, timeRange, onTimeRangeChange, patient }) {
     <section className="vitals-section">
       <div className="vitals-header">
         <h3 className="vitals-title">Diagnosis History</h3>
-        <select 
-          className="time-range-select" 
+        <select
+          className="time-range-select"
           value={timeRange}
           onChange={(e) => onTimeRangeChange(e.target.value)}
         >
@@ -31,4 +31,3 @@ function VitalsSection({ chartData, timeRange, onTimeRangeChange, patient }) {
 }
 
 export default VitalsSection;
-

@@ -56,13 +56,13 @@ function App() {
         }
 
         const data = await response.json();
-        
+
         if (!Array.isArray(data)) {
           throw new Error('Invalid data format');
         }
 
         setPatients(data);
-        
+
         let jessica = null;
         for (let i = 0; i < data.length; i++) {
           const p = data[i];
@@ -104,7 +104,7 @@ function App() {
           {patient && !loading && (
             <div className="main-content-grid">
               <div className="left-column">
-                <PatientsList 
+                <PatientsList
                   patients={patients}
                   selectedPatient={patient}
                   onSelectPatient={(selectedPatient) => {
@@ -121,8 +121,8 @@ function App() {
               <div className="right-column">
                 <div className="right-column-grid">
                   <div className="grid-top-left">
-                    <VitalsSection 
-                      chartData={chartData} 
+                    <VitalsSection
+                      chartData={chartData}
                       timeRange={timeRange}
                       onTimeRangeChange={setTimeRange}
                       patient={patient}

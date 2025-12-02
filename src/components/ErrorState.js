@@ -7,4 +7,3 @@ function ErrorState({ error }) {
 }
 
 export default ErrorState;
-

@@ -8,7 +8,7 @@ function VitalsCards({ patient }) {
   if (patient && patient.name) {
     const name = patient.name.toLowerCase();
     const isJessica = name.includes('jessica') && name.includes('taylor');
-    
+
     if (isJessica) {
       respiratoryRate = '20 rpm';
       temperature = '98.6°F';
@@ -17,17 +17,17 @@ function VitalsCards({ patient }) {
       tempStatus = 'Normal';
     } else if (patient.diagnosis_history && patient.diagnosis_history.length > 0) {
       const latest = patient.diagnosis_history[0];
-      
+
       if (latest.respiratory_rate) {
         respiratoryRate = latest.respiratory_rate.value + ' rpm';
         respiratoryStatus = latest.respiratory_rate.levels;
       }
-      
+
       if (latest.temperature) {
         temperature = latest.temperature.value + '°F';
         tempStatus = latest.temperature.levels;
       }
-      
+
       if (latest.heart_rate) {
         heartRate = latest.heart_rate.value + ' bpm';
       }
@@ -64,4 +64,3 @@ function VitalsCards({ patient }) {
 }
 
 export default VitalsCards;
-

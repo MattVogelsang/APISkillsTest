@@ -7,4 +7,3 @@ function LoadingState() {
 }
 
 export default LoadingState;
-

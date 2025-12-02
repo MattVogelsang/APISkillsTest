@@ -3,15 +3,15 @@ import { getPatientImage } from '../utils/patientImages';
 
 function PatientCard({ patient }) {
   const patientImage = getPatientImage(patient);
-  
+
   return (
     <div className="patient-card">
       <div className="patient-profile-section">
         <div className="profile-image">
-          <img 
-            src={patientImage.src} 
+          <img
+            src={patientImage.src}
             srcSet={patientImage.srcSet}
-            alt={patient.name || 'Patient'} 
+            alt={patient.name || 'Patient'}
             className="profile-photo"
           />
         </div>
@@ -79,4 +79,3 @@ function PatientCard({ patient }) {
 }
 
 export default PatientCard;
-

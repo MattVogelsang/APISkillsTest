@@ -51,7 +51,7 @@ function formatDateKey(item) {
     const year = date.getFullYear();
     return month + ', ' + year;
   }
-  
+
   if (item.year && item.month) {
     let monthShort = monthNames[item.month];
     if (!monthShort) {
@@ -59,7 +59,7 @@ function formatDateKey(item) {
     }
     return monthShort + ', ' + item.year;
   }
-  
+
   return '';
 }
 
@@ -69,7 +69,7 @@ function processChartData(history) {
   }
 
   const dataByMonth = {};
-  
+
   for (let i = 0; i < history.length; i++) {
     const item = history[i];
     const bp = item.blood_pressure;
@@ -77,10 +77,10 @@ function processChartData(history) {
 
     const dateKey = formatDateKey(item);
     if (!dateKey) continue;
-    
+
     const sys = parseFloat(bp.systolic.value || bp.systolic);
     const dia = parseFloat(bp.diastolic.value || bp.diastolic);
-    
+
     if (isNaN(sys) || isNaN(dia)) continue;
 
     if (!dataByMonth[dateKey]) {
@@ -100,26 +100,26 @@ function processChartData(history) {
   const labels = [];
   const sysValues = [];
   const diaValues = [];
-  
+
   const lastSixMonths = sortedMonths.slice(-6);
   for (let i = 0; i < lastSixMonths.length; i++) {
     const monthKey = lastSixMonths[i];
     const readings = dataByMonth[monthKey];
-    
+
     if (readings.sys.length > 0 && readings.dia.length > 0) {
       let sumSys = 0;
       for (let j = 0; j < readings.sys.length; j++) {
         sumSys = sumSys + readings.sys[j];
       }
-      
+
       let sumDia = 0;
       for (let j = 0; j < readings.dia.length; j++) {
         sumDia = sumDia + readings.dia[j];
       }
-      
+
       const avgSys = sumSys / readings.sys.length;
       const avgDia = sumDia / readings.dia.length;
-      
+
       labels.push(monthKey);
       sysValues.push(Math.round(avgSys));
       diaValues.push(Math.round(avgDia));
@@ -161,4 +161,3 @@ function processChartData(history) {
 }
 
 export { createDefaultChart, processChartData };
-

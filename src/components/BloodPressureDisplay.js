@@ -21,4 +21,3 @@ function BloodPressureDisplay() {
 }
 
 export default BloodPressureDisplay;
-

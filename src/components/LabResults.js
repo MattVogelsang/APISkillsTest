@@ -29,4 +29,3 @@ function LabResults() {
 }
 
 export default LabResults;
-

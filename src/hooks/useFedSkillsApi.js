@@ -41,4 +41,3 @@ export const useFedSkillsApi = (authKey) => {
 
   return { data, loading, error };
 };
-

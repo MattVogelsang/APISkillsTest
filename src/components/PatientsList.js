@@ -39,7 +39,7 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
             'thomas johnson',
             'david miller'
           ];
-          
+
           for (let i = 0; i < excluded.length; i++) {
             if (name.includes(excluded[i])) {
               return false;
@@ -55,7 +55,7 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
             age = currentYear - birthYear;
           }
           const patientImage = getPatientImage(patient, index);
-          
+
           return (
             <div
               key={index}
@@ -63,10 +63,10 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
               onClick={() => onSelectPatient && onSelectPatient(patient)}
             >
               <div className="patient-list-avatar">
-                <img 
+                <img
                   src={patientImage.src}
                   srcSet={patientImage.srcSet}
-                  alt={patient.name || 'Patient'} 
+                  alt={patient.name || 'Patient'}
                   className="patient-list-photo"
                 />
               </div>
@@ -92,4 +92,3 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
 }
 
 export default PatientsList;
-

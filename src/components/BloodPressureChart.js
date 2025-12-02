@@ -32,4 +32,3 @@ function BloodPressureChart({ chartData }) {
 }
 
 export default BloodPressureChart;
-
