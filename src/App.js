@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import {
   Chart as ChartJS,
@@ -16,9 +16,11 @@ import { createDefaultChart, processChartData } from './utils/chartUtils';
 import Header from './components/Header';
 import LoadingState from './components/LoadingState';
 import ErrorState from './components/ErrorState';
+import PatientsList from './components/PatientsList';
 import VitalsSection from './components/VitalsSection';
 import DiagnosticList from './components/DiagnosticList';
 import PatientCard from './components/PatientCard';
+import LabResults from './components/LabResults';
 
 ChartJS.register(
   CategoryScale,
@@ -31,53 +33,61 @@ ChartJS.register(
 );
 
 function App() {
+  const [patients, setPatients] = useState([]);
   const [patient, setPatient] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('Last 6 months');
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const auth = getAuthToken(USERNAME, PASSWORD);
-      const response = await fetch(API_URL, {
-        headers: {
-          'Authorization': 'Basic ' + auth
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch');
-      }
-
-      const data = await response.json();
-      const jessica = data.find(p => {
-        const name = (p.name || '').toLowerCase();
-        return name.includes('jessica') && name.includes('taylor');
-      });
-
-      if (!jessica) {
-        throw new Error('Patient not found');
-      }
-
-      setPatient(jessica);
-      const history = jessica.diagnosis_history;
-      setChartData(history && history.length > 0 
-        ? processChartData(history) 
-        : createDefaultChart()
-      );
-    } catch (err) {
-      setError(err.message);
-      setChartData(createDefaultChart());
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const auth = getAuthToken(USERNAME, PASSWORD);
+        const response = await fetch(API_URL, {
+          headers: {
+            'Authorization': 'Basic ' + auth
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch');
+        }
+
+        const data = await response.json();
+        
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid data format');
+        }
+
+        setPatients(data);
+        
+        const jessica = data.find(p => {
+          const name = (p.name || '').toLowerCase();
+          return name.includes('jessica') && name.includes('taylor');
+        });
+
+        if (!jessica) {
+          throw new Error('Patient not found');
+        }
+
+        setPatient(jessica);
+        const history = jessica.diagnosis_history;
+        if (history && history.length > 0) {
+          setChartData(processChartData(history));
+        } else {
+          setChartData(createDefaultChart());
+        }
+      } catch (err) {
+        setError(err.message);
+        setChartData(createDefaultChart());
+      } finally {
+        setLoading(false);
+      }
+    }
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   return (
     <div className="dashboard-container">
@@ -89,15 +99,39 @@ function App() {
           {patient && !loading && (
             <div className="main-content-grid">
               <div className="left-column">
-                <VitalsSection 
-                  chartData={chartData} 
-                  timeRange={timeRange}
-                  onTimeRangeChange={setTimeRange}
+                <PatientsList 
+                  patients={patients}
+                  selectedPatient={patient}
+                  onSelectPatient={(p) => {
+                    setPatient(p);
+                    const history = p.diagnosis_history;
+                    if (history && history.length > 0) {
+                      setChartData(processChartData(history));
+                    } else {
+                      setChartData(createDefaultChart());
+                    }
+                  }}
                 />
-                <DiagnosticList diagnosticList={patient.diagnostic_list} />
               </div>
               <div className="right-column">
-                <PatientCard patient={patient} />
+                <div className="right-column-grid">
+                  <div className="grid-top-left">
+                    <VitalsSection 
+                      chartData={chartData} 
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                    />
+                  </div>
+                  <div className="grid-top-right">
+                    <PatientCard patient={patient} />
+                  </div>
+                  <div className="grid-bottom-left">
+                    <DiagnosticList diagnosticList={patient.diagnostic_list} />
+                  </div>
+                  <div className="grid-bottom-right">
+                    <LabResults />
+                  </div>
+                </div>
               </div>
             </div>
           )}

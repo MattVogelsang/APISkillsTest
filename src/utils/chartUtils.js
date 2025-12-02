@@ -1,4 +1,19 @@
-export function createDefaultChart() {
+const monthNames = {
+  'January': 'Jan',
+  'February': 'Feb',
+  'March': 'Mar',
+  'April': 'Apr',
+  'May': 'May',
+  'June': 'Jun',
+  'July': 'Jul',
+  'August': 'Aug',
+  'September': 'Sep',
+  'October': 'Oct',
+  'November': 'Nov',
+  'December': 'Dec'
+};
+
+function createDefaultChart() {
   return {
     labels: ['Nov, 2023', 'Dec, 2023', 'Jan, 2024', 'Feb, 2024', 'Mar, 2024'],
     datasets: [{
@@ -8,6 +23,9 @@ export function createDefaultChart() {
       backgroundColor: 'rgba(230, 111, 210, 0.1)',
       pointRadius: 6,
       pointHoverRadius: 8,
+      pointBackgroundColor: '#E66FD2',
+      pointBorderColor: '#E66FD2',
+      pointBorderWidth: 2,
       tension: 0.4,
       fill: false
     }, {
@@ -17,60 +35,80 @@ export function createDefaultChart() {
       backgroundColor: 'rgba(140, 111, 230, 0.1)',
       pointRadius: 4,
       pointHoverRadius: 6,
+      pointBackgroundColor: '#8C6FE6',
+      pointBorderColor: '#8C6FE6',
+      pointBorderWidth: 2,
       tension: 0.4,
       fill: false
     }]
   };
 }
 
-export function processChartData(history) {
+export { createDefaultChart };
+
+function formatDateKey(item) {
+  if (item.date) {
+    const date = new Date(item.date);
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    return month + ', ' + year;
+  }
+  if (item.year && item.month) {
+    const monthShort = monthNames[item.month] || item.month.substring(0, 3);
+    return monthShort + ', ' + item.year;
+  }
+  return '';
+}
+
+function processChartData(history) {
   if (!history || history.length === 0) {
     return createDefaultChart();
   }
 
-  const monthMap = {};
+  const dataByMonth = {};
   
-  history.forEach(item => {
+  for (let i = 0; i < history.length; i++) {
+    const item = history[i];
     const bp = item.blood_pressure;
-    if (!bp || !bp.systolic || !bp.diastolic) return;
+    if (!bp || !bp.systolic || !bp.diastolic) continue;
 
-    let dateKey = '';
-    if (item.date) {
-      dateKey = new Date(item.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-    } else if (item.year) {
-      const date = new Date(parseInt(item.year), (item.month || 1) - 1, 1);
-      dateKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-    } else {
-      return;
-    }
+    const dateKey = formatDateKey(item);
+    if (!dateKey) continue;
     
     const sys = parseFloat(bp.systolic.value || bp.systolic);
     const dia = parseFloat(bp.diastolic.value || bp.diastolic);
     
-    if (isNaN(sys) || isNaN(dia) || !dateKey) return;
+    if (isNaN(sys) || isNaN(dia)) continue;
 
-    if (!monthMap[dateKey]) {
-      monthMap[dateKey] = { sys: [], dia: [] };
+    if (!dataByMonth[dateKey]) {
+      dataByMonth[dateKey] = { sys: [], dia: [] };
     }
-    monthMap[dateKey].sys.push(sys);
-    monthMap[dateKey].dia.push(dia);
+    dataByMonth[dateKey].sys.push(sys);
+    dataByMonth[dateKey].dia.push(dia);
+  }
+
+  const sortedMonths = Object.keys(dataByMonth).sort((a, b) => {
+    return new Date(a) - new Date(b);
   });
 
-  const sortedMonths = Object.keys(monthMap).sort((a, b) => new Date(a) - new Date(b));
   const labels = [];
   const sysValues = [];
   const diaValues = [];
   
-  sortedMonths.slice(-6).forEach(monthKey => {
-    const readings = monthMap[monthKey];
+  const lastSixMonths = sortedMonths.slice(-6);
+  for (let i = 0; i < lastSixMonths.length; i++) {
+    const monthKey = lastSixMonths[i];
+    const readings = dataByMonth[monthKey];
     if (readings.sys.length > 0 && readings.dia.length > 0) {
-      const avgSys = readings.sys.reduce((a, b) => a + b, 0) / readings.sys.length;
-      const avgDia = readings.dia.reduce((a, b) => a + b, 0) / readings.dia.length;
+      const sumSys = readings.sys.reduce((a, b) => a + b, 0);
+      const sumDia = readings.dia.reduce((a, b) => a + b, 0);
+      const avgSys = sumSys / readings.sys.length;
+      const avgDia = sumDia / readings.dia.length;
       labels.push(monthKey);
       sysValues.push(Math.round(avgSys));
       diaValues.push(Math.round(avgDia));
     }
-  });
+  }
 
   if (labels.length === 0) {
     return createDefaultChart();
@@ -85,6 +123,9 @@ export function processChartData(history) {
       backgroundColor: 'rgba(230, 111, 210, 0.1)',
       pointRadius: 6,
       pointHoverRadius: 8,
+      pointBackgroundColor: '#E66FD2',
+      pointBorderColor: '#E66FD2',
+      pointBorderWidth: 2,
       tension: 0.4,
       fill: false
     }, {
@@ -94,9 +135,14 @@ export function processChartData(history) {
       backgroundColor: 'rgba(140, 111, 230, 0.1)',
       pointRadius: 4,
       pointHoverRadius: 6,
+      pointBackgroundColor: '#8C6FE6',
+      pointBorderColor: '#8C6FE6',
+      pointBorderWidth: 2,
       tension: 0.4,
       fill: false
     }]
   };
 }
+
+export { createDefaultChart, processChartData };
 

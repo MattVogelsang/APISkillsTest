@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-
-const API_URL = 'https://fedskillstest.coalitiontechnologies.workers.dev';
+import { API_URL } from '../utils/constants';
 
 export const useFedSkillsApi = (authKey) => {
   const [data, setData] = useState([]);

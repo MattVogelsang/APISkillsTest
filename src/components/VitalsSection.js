@@ -6,7 +6,7 @@ function VitalsSection({ chartData, timeRange, onTimeRangeChange }) {
   return (
     <section className="vitals-section">
       <div className="vitals-header">
-        <h3 className="vitals-title">History</h3>
+        <h3 className="vitals-title">Diagnosis History</h3>
         <select 
           className="time-range-select" 
           value={timeRange}
