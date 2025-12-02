@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/APISkillsTest/static/css/main.147f10ba.css",
+    "main.js": "/APISkillsTest/static/js/main.2b6d7eee.js",
+    "index.html": "/APISkillsTest/index.html",
+    "main.147f10ba.css.map": "/APISkillsTest/static/css/main.147f10ba.css.map",
+    "main.2b6d7eee.js.map": "/APISkillsTest/static/js/main.2b6d7eee.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.147f10ba.css",
+    "static/js/main.2b6d7eee.js"
+  ]
+}
