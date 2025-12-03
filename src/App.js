@@ -50,15 +50,20 @@ function App() {
 
       if (jessica) {
         setPatient(jessica);
-        const history = jessica.diagnosis_history;
-        if (history && history.length > 0) {
-          setChartData(processChartData(history));
-        } else {
-          setChartData(createDefaultChart());
-        }
       }
     }
   }, [patients]);
+
+  useEffect(() => {
+    if (patient) {
+      const history = patient.diagnosis_history;
+      if (history && history.length > 0) {
+        setChartData(processChartData(history));
+      } else {
+        setChartData(createDefaultChart());
+      }
+    }
+  }, [patient]);
 
   return (
     <div className="dashboard-container">
