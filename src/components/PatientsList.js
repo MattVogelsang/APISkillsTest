@@ -1,5 +1,4 @@
 function PatientsList({ patients, selectedPatient, onSelectPatient }) {
-
   if (!patients || patients.length === 0) {
     return (
       <div className="patients-list-section">

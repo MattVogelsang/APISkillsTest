@@ -4,6 +4,7 @@ function VitalsCards({ patient }) {
   let temperature = '98.6°F';
   let tempStatus = 'Normal';
   let heartRate = '72 bpm';
+  let heartRateStatus = 'Normal';
 
   if (patient && patient.name) {
     const name = patient.name.toLowerCase();
@@ -15,6 +16,7 @@ function VitalsCards({ patient }) {
       heartRate = '72 bpm';
       respiratoryStatus = 'Normal';
       tempStatus = 'Normal';
+      heartRateStatus = 'Normal';
     } else if (patient.diagnosis_history && patient.diagnosis_history.length > 0) {
       const latest = patient.diagnosis_history[0];
 
@@ -30,6 +32,7 @@ function VitalsCards({ patient }) {
 
       if (latest.heart_rate) {
         heartRate = latest.heart_rate.value + ' bpm';
+        heartRateStatus = latest.heart_rate.levels || 'Normal';
       }
     }
   }
@@ -57,6 +60,7 @@ function VitalsCards({ patient }) {
         <div className="vital-info">
           <div className="vital-label">Heart Rate</div>
           <div className="vital-value">{heartRate}</div>
+          <div className="vital-status">{heartRateStatus}</div>
         </div>
       </div>
     </div>

@@ -24,13 +24,9 @@ function DiagnosticList({ diagnosticList }) {
           </thead>
           <tbody>
             {diagnosticList.map((diagnostic, index) => {
-              let name = diagnostic;
-              if (diagnostic.name) {
-                name = diagnostic.name;
-              }
-
-              let description = diagnostic.description || '';
-              let status = diagnostic.status || '';
+              const name = diagnostic.name || diagnostic;
+              const description = diagnostic.description || '';
+              const status = diagnostic.status || '';
 
               return (
                 <tr key={index} className="diagnostic-row">
