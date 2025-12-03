@@ -15,11 +15,6 @@ export const useFedSkillsApi = () => {
       try {
         const username = process.env.REACT_APP_USERNAME || 'coalition';
         const password = process.env.REACT_APP_PASSWORD || 'skills-test';
-        
-        if (!username || !password) {
-          throw new Error('Missing credentials');
-        }
-
         const auth = getAuthToken(username, password);
 
         const response = await fetch(API_URL, {
@@ -27,7 +22,7 @@ export const useFedSkillsApi = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch: ' + response.status);
+          throw new Error('Failed to fetch');
         }
 
         const result = await response.json();

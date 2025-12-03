@@ -91,7 +91,7 @@ function processChartData(history) {
   }
 
   const allMonths = Object.keys(dataByMonth);
-  const sortedMonths = allMonths.sort((a, b) => {
+  allMonths.sort((a, b) => {
     const dateA = new Date(a);
     const dateB = new Date(b);
     return dateA - dateB;
@@ -101,7 +101,7 @@ function processChartData(history) {
   const sysValues = [];
   const diaValues = [];
 
-  const lastSixMonths = sortedMonths.slice(-6);
+  const lastSixMonths = allMonths.slice(-6);
   for (let i = 0; i < lastSixMonths.length; i++) {
     const monthKey = lastSixMonths[i];
     const readings = dataByMonth[monthKey];

@@ -1,5 +1,5 @@
 function VitalsCards({ patient }) {
-  let respiratoryRate = '20 rpm';
+  let respiratoryRate = '20 bpm';
   let respiratoryStatus = 'Normal';
   let temperature = '98.6°F';
   let tempStatus = 'Normal';
