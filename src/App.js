@@ -80,12 +80,6 @@ function App() {
                   selectedPatient={patient}
                   onSelectPatient={(selectedPatient) => {
                     setPatient(selectedPatient);
-                    const history = selectedPatient.diagnosis_history;
-                    if (history && history.length > 0) {
-                      setChartData(processChartData(history));
-                    } else {
-                      setChartData(createDefaultChart());
-                    }
                   }}
                 />
               </div>

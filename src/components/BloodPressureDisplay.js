@@ -1,12 +1,12 @@
 function BloodPressureDisplay({ patient }) {
   let systolic = 120;
   let diastolic = 80;
-  let systolicStatus = 'Higher than Average';
-  let diastolicStatus = 'Lower than Average';
-  let showSystolicUp = true;
+  let systolicStatus = 'Normal';
+  let diastolicStatus = 'Normal';
+  let showSystolicUp = false;
   let showSystolicDown = false;
   let showDiastolicUp = false;
-  let showDiastolicDown = true;
+  let showDiastolicDown = false;
 
   if (patient && patient.diagnosis_history && patient.diagnosis_history.length > 0) {
     const latest = patient.diagnosis_history[0];

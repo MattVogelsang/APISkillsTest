@@ -109,12 +109,12 @@ function processChartData(history) {
     if (readings.sys.length > 0 && readings.dia.length > 0) {
       let sumSys = 0;
       for (let j = 0; j < readings.sys.length; j++) {
-        sumSys = sumSys + readings.sys[j];
+        sumSys += readings.sys[j];
       }
 
       let sumDia = 0;
       for (let j = 0; j < readings.dia.length; j++) {
-        sumDia = sumDia + readings.dia[j];
+        sumDia += readings.dia[j];
       }
 
       const avgSys = sumSys / readings.sys.length;

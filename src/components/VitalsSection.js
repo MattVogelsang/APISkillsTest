@@ -16,7 +16,7 @@ function VitalsSection({ chartData, patient }) {
 
         <div className="chart-wrapper">
           <div className="chart-container">
-            <BloodPressureChart key={patient && patient.name ? patient.name : 'default'} chartData={chartData} />
+            <BloodPressureChart key={patient ? patient.name : 'default'} chartData={chartData} />
           </div>
           <BloodPressureDisplay patient={patient} />
         </div>
