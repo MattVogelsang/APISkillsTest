@@ -1,20 +1,18 @@
-import { getPatientImage } from '../utils/patientImages';
-
 function PatientsList({ patients, selectedPatient, onSelectPatient }) {
 
   if (!patients || patients.length === 0) {
     return (
-      <section className="patients-list-section">
+      <div className="patients-list-section">
         <div className="patients-list-header">
           <h3 className="patients-list-title">Patients</h3>
         </div>
         <p className="no-patients">No patients available</p>
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="patients-list-section">
+    <div className="patients-list-section">
       <div className="patients-list-header">
         <h3 className="patients-list-title">Patients</h3>
         <button className="patients-search-btn" aria-label="Search">
@@ -28,8 +26,6 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
         {patients.filter(patient => {
           const name = (patient.name || '').toLowerCase();
           const excluded = [
-            'kevin anderson',
-            'nathan',
             'richard brown',
             'jennifer johnson',
             'william johnson',
@@ -54,8 +50,6 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
             const currentYear = new Date().getFullYear();
             age = currentYear - birthYear;
           }
-          const patientImage = getPatientImage(patient, index);
-
           return (
             <div
               key={index}
@@ -64,8 +58,7 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
             >
               <div className="patient-list-avatar">
                 <img
-                  src={patientImage.src}
-                  srcSet={patientImage.srcSet}
+                  src={patient.profile_picture || '/images/JT.png'}
                   alt={patient.name || 'Patient'}
                   className="patient-list-photo"
                 />
@@ -87,7 +80,7 @@ function PatientsList({ patients, selectedPatient, onSelectPatient }) {
           );
         })}
       </div>
-    </section>
+    </div>
   );
 }
 

@@ -1,3 +1,1 @@
-export const API_URL = 'https://fedskillstest.coalitiontechnologies.workers.dev';
-export const USERNAME = 'coalition';
-export const PASSWORD = 'skills-test';
+export const API_URL = process.env.REACT_APP_API_URL || 'https://fedskillstest.coalitiontechnologies.workers.dev';

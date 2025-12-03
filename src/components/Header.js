@@ -54,11 +54,7 @@ function Header() {
             <img src="/images/settings_FILL0_wght300_GRAD0_opsz24.svg" alt="Settings" className="nav-icon" />
           </button>
           <button className="nav-ellipsis-btn" aria-label="More options">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="1"/>
-              <circle cx="12" cy="5" r="1"/>
-              <circle cx="12" cy="19" r="1"/>
-            </svg>
+            <img src="/images/more_vert_FILL0_wght300_GRAD0_opsz24.svg" alt="More options" className="nav-icon" />
           </button>
         </div>
       </div>

@@ -8,7 +8,7 @@ function LabResults() {
   ];
 
   return (
-    <section className="lab-results-section">
+    <div className="lab-results-section">
       <h3 className="lab-results-title">Lab Results</h3>
       <div className="lab-results-content">
         {labResults.map((result, index) => (
@@ -24,7 +24,7 @@ function LabResults() {
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 

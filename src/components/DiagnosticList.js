@@ -1,17 +1,17 @@
 function DiagnosticList({ diagnosticList }) {
   if (!diagnosticList || diagnosticList.length === 0) {
     return (
-      <section className="diagnostic-list-section">
+      <div className="diagnostic-list-section">
         <h3 className="diagnostic-list-title">Diagnostic List</h3>
         <div className="diagnostic-list-content">
           <p className="no-diagnostics">No diagnostics available</p>
         </div>
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="diagnostic-list-section">
+    <div className="diagnostic-list-section">
       <h3 className="diagnostic-list-title">Diagnostic List</h3>
       <div className="diagnostic-list-content">
         <table className="diagnostic-table">
@@ -43,7 +43,7 @@ function DiagnosticList({ diagnosticList }) {
           </tbody>
         </table>
       </div>
-    </section>
+    </div>
   );
 }
 

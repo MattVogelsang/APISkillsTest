@@ -10,8 +10,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import { API_URL, USERNAME, PASSWORD } from './utils/constants';
-import { getAuthToken } from './utils/helpers';
+import { useFedSkillsApi } from './hooks/useFedSkillsApi';
 import { createDefaultChart, processChartData } from './utils/chartUtils';
 import Header from './components/Header';
 import LoadingState from './components/LoadingState';
@@ -33,50 +32,23 @@ ChartJS.register(
 );
 
 function App() {
-  const [patients, setPatients] = useState([]);
+  const { data: patients, loading, error } = useFedSkillsApi();
   const [patient, setPatient] = useState(null);
   const [chartData, setChartData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState('Last 6 months');
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const auth = getAuthToken(USERNAME, PASSWORD);
-        const response = await fetch(API_URL, {
-          headers: {
-            'Authorization': 'Basic ' + auth
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch');
+    if (patients && patients.length > 0) {
+      let jessica = null;
+      for (let i = 0; i < patients.length; i++) {
+        const p = patients[i];
+        const name = (p.name || '').toLowerCase();
+        if (name.includes('jessica') && name.includes('taylor')) {
+          jessica = p;
+          break;
         }
+      }
 
-        const data = await response.json();
-
-        if (!Array.isArray(data)) {
-          throw new Error('Invalid data format');
-        }
-
-        setPatients(data);
-
-        let jessica = null;
-        for (let i = 0; i < data.length; i++) {
-          const p = data[i];
-          const name = (p.name || '').toLowerCase();
-          if (name.includes('jessica') && name.includes('taylor')) {
-            jessica = p;
-            break;
-          }
-        }
-
-        if (!jessica) {
-          throw new Error('Patient not found');
-        }
-
+      if (jessica) {
         setPatient(jessica);
         const history = jessica.diagnosis_history;
         if (history && history.length > 0) {
@@ -84,15 +56,9 @@ function App() {
         } else {
           setChartData(createDefaultChart());
         }
-      } catch (err) {
-        setError(err.message);
-        setChartData(createDefaultChart());
-      } finally {
-        setLoading(false);
       }
     }
-    fetchData();
-  }, []);
+  }, [patients]);
 
   return (
     <div className="dashboard-container">
@@ -123,8 +89,6 @@ function App() {
                   <div className="grid-top-left">
                     <VitalsSection
                       chartData={chartData}
-                      timeRange={timeRange}
-                      onTimeRangeChange={setTimeRange}
                       patient={patient}
                     />
                   </div>

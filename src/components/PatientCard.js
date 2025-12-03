@@ -1,16 +1,12 @@
 import { formatDate } from '../utils/helpers';
-import { getPatientImage } from '../utils/patientImages';
 
 function PatientCard({ patient }) {
-  const patientImage = getPatientImage(patient);
-
   return (
     <div className="patient-card">
       <div className="patient-profile-section">
         <div className="profile-image">
           <img
-            src={patientImage.src}
-            srcSet={patientImage.srcSet}
+            src={patient.profile_picture || '/images/JT.png'}
             alt={patient.name || 'Patient'}
             className="profile-photo"
           />
