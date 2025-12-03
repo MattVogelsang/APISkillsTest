@@ -1,12 +1,61 @@
 import { formatDate } from '../utils/helpers';
 
+function getPatientImage(patient) {
+  if (!patient || !patient.name) {
+    return '/images/JT.png';
+  }
+
+  const name = patient.name.toLowerCase();
+
+  if (name.includes('jessica') && name.includes('taylor')) {
+    return '/images/JT2@2x.png';
+  }
+  if (name.includes('emily')) {
+    return '/images/Layer 8@2x.png';
+  }
+  if (name.includes('ryan') && name.includes('johnson')) {
+    return '/images/Layer 1@2x.png';
+  }
+  if (name.includes('brandon') && name.includes('mitchell')) {
+    return '/images/Layer 3@2x.png';
+  }
+  if (name.includes('samantha') && name.includes('johnson')) {
+    return '/images/Layer 6@2x.png';
+  }
+  if (name.includes('ashley') && name.includes('martinez')) {
+    return '/images/Layer 12@2x.png';
+  }
+  if (name.includes('olivia') && name.includes('brown')) {
+    return '/images/Layer 10@2x.png';
+  }
+  if (name.includes('tyler') && name.includes('davis')) {
+    return '/images/Layer 9@2x.png';
+  }
+  if (name.includes('dylan') && name.includes('thompson')) {
+    return '/images/Layer 5@2x.png';
+  }
+  if (name.includes('nathan')) {
+    return '/images/Layer 7@2x.png';
+  }
+  if (name.includes('mike') && name.includes('nolan')) {
+    return '/images/pexels-photo-1222271@2x.png';
+  }
+  if (name.includes('kevin') && name.includes('anderson')) {
+    return '/images/Layer 4@2x.png';
+  }
+
+  return patient.profile_picture || '/images/JT.png';
+}
+
 function PatientCard({ patient }) {
+  const profileImage = getPatientImage(patient);
+
   return (
     <div className="patient-card">
       <div className="patient-profile-section">
         <div className="profile-image">
           <img
-            src={patient.profile_picture || '/images/JT.png'}
+            src={profileImage}
             alt={patient.name || 'Patient'}
             className="profile-photo"
           />
@@ -27,11 +76,14 @@ function PatientCard({ patient }) {
 
         <div className="detail-item">
           <div className="detail-icon-wrapper">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="detail-icon">
-              <circle cx="10" cy="10" r="7"/>
-              <path d="M10 3v7M10 3l-3 3M10 3l3 3"/>
-              {patient.gender !== 'Male' && <path d="M7 17h6"/>}
-            </svg>
+            {patient.gender === 'Male' ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="detail-icon">
+                <circle cx="10" cy="10" r="7"/>
+                <path d="M10 3v7M10 3l-3 3M10 3l3 3"/>
+              </svg>
+            ) : (
+              <img src="/images/FemaleIcon.svg" alt="Gender" className="detail-icon" />
+            )}
           </div>
           <div className="detail-content">
             <span className="detail-label">Gender</span>

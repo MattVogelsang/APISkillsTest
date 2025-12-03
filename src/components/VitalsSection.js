@@ -10,15 +10,21 @@ function VitalsSection({ chartData, patient }) {
       </div>
 
       <div className="blood-pressure-container">
-        <div className="blood-pressure-header">
-          <h4 className="blood-pressure-title">Blood Pressure</h4>
-        </div>
-
         <div className="chart-wrapper">
-          <div className="chart-container">
-            <BloodPressureChart key={patient ? patient.name : 'default'} chartData={chartData} />
+          <div className="blood-pressure-header">
+            <h4 className="blood-pressure-title">Blood Pressure</h4>
+            <select className="time-range-select">
+              <option>Last 3 months</option>
+              <option>Last 6 months</option>
+              <option>Last year</option>
+            </select>
           </div>
-          <BloodPressureDisplay patient={patient} />
+          <div className="chart-content-wrapper">
+            <div className="chart-container">
+              <BloodPressureChart key={patient ? patient.name : 'default'} chartData={chartData} />
+            </div>
+            <BloodPressureDisplay patient={patient} />
+          </div>
         </div>
       </div>
 

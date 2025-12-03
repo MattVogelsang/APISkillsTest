@@ -18,7 +18,12 @@ function BloodPressureChart({ chartData }) {
       },
       x: {
         grid: { display: false },
-        ticks: { font: { size: 12 }, color: '#666666' }
+        ticks: { 
+          font: { size: 12 }, 
+          color: '#666666',
+          maxRotation: 0,
+          minRotation: 0
+        }
       }
     },
     interaction: {

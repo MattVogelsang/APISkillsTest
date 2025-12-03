@@ -83,24 +83,20 @@ function App() {
                   }}
                 />
               </div>
-              <div className="right-column">
-                <div className="right-column-grid">
-                  <div className="grid-top-left">
-                    <VitalsSection
-                      chartData={chartData}
-                      patient={patient}
-                    />
-                  </div>
-                  <div className="grid-top-right">
-                    <PatientCard patient={patient} />
-                  </div>
-                  <div className="grid-bottom-left">
-                    <DiagnosticList diagnosticList={patient.diagnostic_list} />
-                  </div>
-                  <div className="grid-bottom-right">
-                    <LabResults />
-                  </div>
-                </div>
+              <div className="grid-top-left">
+                <VitalsSection
+                  chartData={chartData}
+                  patient={patient}
+                />
+              </div>
+              <div className="grid-top-right">
+                <PatientCard patient={patient} />
+              </div>
+              <div className="grid-bottom-left">
+                <DiagnosticList diagnosticList={patient.diagnostic_list} />
+              </div>
+              <div className="grid-bottom-right">
+                <LabResults />
               </div>
             </div>
           )}
